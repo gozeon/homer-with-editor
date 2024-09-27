@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edior</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+</head>
+
+<body>
+    <a href="https://github.com/bastienwirtz/homer/blob/main/docs/configuration.md">Homer Configuration</a>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <main class="container" id="app">
+        <details>
+            <summary>Header</summary>
+            <label>
+                <input type="checkbox" role="switch" v-model="state.header" />
+            </label>
+
+            <template v-if="state.header">
+                <label>
+                    title
+                    <input v-model="state.title" />
+                </label>
+
+                <label>
+                    subtitle
+                    <input v-model="state.subtitle" />
+                </label>
+
+                <label>
+                    logo
+                    <input v-model="state.logo" />
+                </label>
+            </template>
+        </details>
+
+        <details>
+            <summary>Link</summary>
+            <article v-for="(item, index) in state.links">
+                <button class="outline" @click="state.links.splice(index, 1)">Remove</button>
+                <label>
+                    name
+                    <input v-model="item.name" />
+                </label>
+                <label>
+                    icon
+                    <input v-model="item.icon" />
+                </label>
+                <label>
+                    url
+                    <input v-model="item.url" type="url" />
+                </label>
+            </article>
+            <button class="outline" @click="state.links.push({})">Add</button>
+        </details>
+
+        <details>
+            <summary>Message</summary>
+            <label>
+                <input type="checkbox" role="switch" v-model="state.showMessage" />
+            </label>
+
+            <template v-if="state.showMessage">
+                <label>
+                    title
+                    <input v-model="state.message.title" />
+                </label>
+
+                <label>
+                    icon
+                    <input v-model="state.message.icon" />
+                </label>
+
+                <label>
+                    style
+                    <select v-model="state.message.style">
+                        <option>is-dark</option>
+                        <option>is-link</option>
+                        <option>is-primary</option>
+                        <option>is-info</option>
+                        <option>is-success</option>
+                        <option>is-warning</option>
+                        <option>is-danger</option>
+                    </select>
+                </label>
+
+                <label>
+                    content
+                    <textarea v-model="state.message.content" ></textarea>
+                </label>
+            </template>
+        </details>
+
+
+        <details>
+            <summary>Services</summary>
+            <article v-for="(item, index) in state.services">
+                <button class="outline" @click="state.services.splice(index, 1)">Remove</button>
+                <label>
+                    name
+                    <input v-model="item.name">
+                </label>
+                <label>
+                    icon
+                    <input v-model="item.icon">
+                </label>
+
+                <h4>items</h4>
+                <article>
+                    <article v-for="(item1, index1) in item.items">
+                        <button class="outline"
+                            @click="state.services[index]['items'].splice(index1, 1)">Remove</button>
+
+                        <label>
+                            name
+                            <input v-model="item1.name">
+                        </label>
+                        <label>
+                            subtitle
+                            <input v-model="item1.subtitle">
+                        </label>
+                        <label>
+                            logo
+                            <input v-model="item1.logo">
+                        </label>
+                        <label>
+                            url
+                            <input type="url" v-model="item1.url">
+                        </label>
+                        <label>
+                            keywords
+                            <input v-model="item1.keywords">
+                        </label>
+                    </article>
+
+                    <button class="outline" @click="state.services[index]['items'].push({})">Add</button>
+
+                </article>
+            </article>
+
+            <button class="outline" @click="state.services.push({ items: [{}] })">Add</button>
+        </details>
+
+        <details>
+            <summary>Footer</summary>
+            <label>
+                <textarea v-model="state.footer"></textarea>
+            </label>
+        </details>
+
+        <input type="button" value="Save" @click="getValue" />
+
+    </main>
+
+    <script>
+        const initial_data = window.__init__data__ || {}
+        const { createApp, reactive, ref } = Vue
+
+        createApp({
+            setup() {
+                const state = reactive(initial_data)
+                state.showMessage = Object.keys(state.message).length > 0
+
+                const getValue = () => {
+                    console.log(state)
+                }
+              
+                return {
+                    state,
+                    getValue,
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+
+</html>
